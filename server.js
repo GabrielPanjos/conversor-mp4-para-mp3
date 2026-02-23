@@ -1,5 +1,4 @@
 import app from "./src/app.js";
-import path from "path";
 
 const PORT = 3000;
 
