@@ -12,7 +12,6 @@ export default async function convertToMp3(req, res, next) {
     const outputPath = path.join(
       process.cwd(),
       "src",
-      "tmp",
       "converted",
       outputFile + ".mp3",
     );
@@ -30,7 +29,7 @@ export default async function convertToMp3(req, res, next) {
       if (path.basename(outputPath).includes(".mp3")) {
         res.status(200).json({
           message: "Arquivo convertido com sucesso!",
-          fileName: outputFile + ".mp3",
+          fileName: outputFile,
         });
       } else {
         res.status(404).send("Arquivo mp3 não encontrado.");
