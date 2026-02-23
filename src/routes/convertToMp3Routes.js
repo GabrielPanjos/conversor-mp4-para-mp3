@@ -4,7 +4,7 @@ import convertToMp3 from "../middlewares/convertMp4ToMp3.js";
 
 const routes = express.Router();
 
-routes.post("/conversion", Mp3Conversor.getMp4Url, convertToMp3);
+routes.post("/converse", Mp3Conversor.getMp4Url, convertToMp3);
 routes.get("/download/:file", Mp3Conversor.downloadMp3);
 
 export default routes;
