@@ -1,10 +1,11 @@
 import Ffmpeg from "fluent-ffmpeg";
 import path from "path";
+import NaoEncontrado from "../errors/NaoEncontrado.js";
 
 export default async function convertToMp3(req, res, next) {
   try {
     if (!path.basename(req.fileMp4).includes(".mp4")) {
-      throw new Error("Arquivo mp4 não encontrado.");
+      next(new NaoEncontrado("Arquivo mp4 não encontrado."));
     }
 
     const outputFile = path.parse(path.basename(req.fileMp4)).name;
@@ -32,11 +33,10 @@ export default async function convertToMp3(req, res, next) {
           fileName: outputFile,
         });
       } else {
-        res.status(404).send("Arquivo mp3 não encontrado.");
+        next(new NaoEncontrado("Arquivo mp3 não encontrado."));
       }
     });
   } catch (err) {
-    console.error(err);
-    throw err;
+    next(err);
   }
 }

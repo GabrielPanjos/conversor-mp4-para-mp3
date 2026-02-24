@@ -1,4 +1,6 @@
 import path from "path";
+import fs from "fs";
+import NaoEncontrado from "../errors/NaoEncontrado.js";
 
 export default class Mp3Conversor {
   static async getMp4Url(req, res, next) {
@@ -7,9 +9,9 @@ export default class Mp3Conversor {
 
       req.fileMp4 = fileMp4;
 
-      await next();
+      next();
     } catch (err) {
-      console.err(err);
+      next(err);
     }
   }
 
@@ -19,15 +21,16 @@ export default class Mp3Conversor {
         process.cwd(),
         "src",
         "converted",
-        req.params.file + ".mp3",
+        req.params.file,
       );
 
-      if (mp3PathFile) {
-        console.log("caminho existe!");
-        res.status(200).download(mp3PathFile);
+      if (fs.existsSync(mp3PathFile)) {
+        await res.status(200).download(mp3PathFile);
+      } else {
+        next(new NaoEncontrado("Arquivo mp3 não encontrado."));
       }
     } catch (err) {
-      console.error(err);
+      next(err);
     }
   }
 }
