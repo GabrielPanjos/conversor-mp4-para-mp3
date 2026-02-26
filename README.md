@@ -1,151 +1,147 @@
-# 🎵 Conversor MP4 para MP3
+# 🎵 Conversor MP4 para MP3 API
 
-API desenvolvida em **Node.js** que realiza a conversão de arquivos
-**MP4** para **MP3** utilizando **FFmpeg**.\
-O projeto permite converter vídeos em áudio e disponibilizar o arquivo
-convertido para download através de uma rota específica.
+API desenvolvida em **Node.js** que permite realizar o upload de arquivos **MP4** e convertê-los automaticamente para **MP3**, disponibilizando o áudio para download.
 
-------------------------------------------------------------------------
+Projeto focado em **manipulação de arquivos**, **processamento de mídia** e boas práticas de backend.
 
-## 🚀 Funcionalidades
+---
 
--   🔄 Conversão de arquivos MP4 para MP3
--   📥 Recebimento do nome/caminho do arquivo para conversão
--   📤 Download do arquivo convertido
--   ⚙️ Estrutura organizada com rotas e middlewares
--   🧠 Tratamento de erros centralizado
+## 📌 Funcionalidades
 
-------------------------------------------------------------------------
+* ✅ Upload de arquivos MP4
+* ✅ Conversão automática para MP3
+* ✅ Extração de áudio via FFmpeg
+* ✅ Download do arquivo convertido
+* ✅ Validação de arquivos enviados
+* ✅ Tratamento de erros centralizado
+
+---
 
 ## 🛠️ Tecnologias Utilizadas
 
--   Node.js
--   Express
--   Fluent-FFmpeg
--   FFmpeg
--   JavaScript
+* Node.js
+* Express.js
+* Multer (upload de arquivos)
+* FFmpeg
+* JavaScript (ES Modules)
+* File System (fs)
 
-------------------------------------------------------------------------
+---
 
-## 📦 Pré-requisitos
+## 📂 Estrutura do Projeto
 
-Antes de executar o projeto, você precisa ter instalado:
-
--   Node.js (v16 ou superior)
--   npm
--   FFmpeg instalado e configurado no PATH do sistema
-
-Verifique se o FFmpeg está instalado corretamente:
-
-``` bash
-ffmpeg -version
+```bash
+src/
+ ├── controllers/
+ ├── routes/
+ ├── middlewares/
+ ├── services/
+ ├── tmp/uploads/
+ └── app.js
+server.js
 ```
 
-------------------------------------------------------------------------
+---
 
-## 📥 Instalação
+## ⚙️ Como Executar o Projeto
 
-``` bash
+### 1️⃣ Clone o repositório
+
+```bash
 git clone https://github.com/GabrielPanjos/conversor-mp4-para-mp3.git
-cd conversor-mp4-para-mp3
+```
+
+### 2️⃣ Instale as dependências
+
+```bash
 npm install
 ```
 
-------------------------------------------------------------------------
+### 3️⃣ Dependência de Conversão de Mídia
 
-## ▶️ Executando o Projeto
+O projeto utiliza **FFmpeg via ffmpeg-static**, portanto **não é necessária instalação manual do FFmpeg** no sistema operacional.
 
-Modo desenvolvimento:
+O binário é incluído automaticamente nas dependências do projeto, garantindo maior portabilidade e facilidade de execução.
 
-``` bash
+✅ Conversão de mídia sem necessidade de instalação externa
+
+---
+
+### 4️⃣ Execute o servidor
+
+```bash
 npm run dev
 ```
 
-Modo produção:
+ou
 
-``` bash
+```bash
 npm start
 ```
 
-O servidor iniciará na porta configurada no projeto (por padrão, 3000).
+---
 
-------------------------------------------------------------------------
+## 🔄 Fluxo da Aplicação
 
-## 📡 Rotas da API
-
-### 🔄 Converter MP4 para MP3
-
-``` http
-POST /converse?fileMp4=nome_do_arquivo
+```text
+Upload MP4
+   ↓
+Validação do arquivo
+   ↓
+Conversão com FFmpeg
+   ↓
+Geração do MP3
+   ↓
+Download do áudio
 ```
 
-**Parâmetro (query):**
+---
 
--   `fileMp4` → Nome ou caminho do arquivo MP4
+## 📡 Endpoint Principal
 
-**Resposta de sucesso:**
+### Upload e Conversão
 
-``` json
-{
-  "message": "Arquivo convertido com sucesso!",
-  "fileName": "nome_do_arquivo.mp3"
-}
+```http
+POST /convert
 ```
 
-------------------------------------------------------------------------
+**Body:** multipart/form-data
 
-### 📥 Download do arquivo convertido
+| Campo | Tipo | Descrição        |
+| ----- | ---- | ---------------- |
+| file  | mp4  | Arquivo de vídeo |
 
-``` http
-GET /download/:mp3Path
-```
+---
 
-Exemplo:
+## 📈 Conceitos Aplicados
 
-``` http
-GET /download/video.mp3
-```
+* Manipulação de arquivos no backend
+* Processamento de mídia
+* Middleware de upload
+* Organização em camadas
+* Tratamento seguro de erros
 
-Retorna o arquivo MP3 convertido para download.
+---
 
-------------------------------------------------------------------------
+## 👨‍💻 Autor
 
-## 📁 Estrutura do Projeto
+**Gabriel Pereira**
 
-``` text
-src/
- ├── controllers/
- ├── middlewares/
- ├── routes/
- ├── tmp/
- │    ├── uploads/
- │    └── converted/
-server.js
-package.json
-```
+GitHub: [https://github.com/GabrielPanjos](https://github.com/GabrielPanjos)
 
-------------------------------------------------------------------------
+---
 
-## 🧠 Como Funciona
+## ⭐ Objetivo do Projeto
 
-1.  O usuário envia o nome/caminho do arquivo MP4.
-2.  O servidor localiza o arquivo na pasta de uploads.
-3.  O FFmpeg realiza a conversão para MP3.
-4.  O arquivo convertido é salvo na pasta `converted`.
-5.  O usuário pode baixar o arquivo através da rota de download.
+Projeto desenvolvido para estudo de:
 
-------------------------------------------------------------------------
+* APIs backend
+* Upload de arquivos
+* Processamento de mídia
+* Integração com ferramentas externas
 
-## 📌 Possíveis Melhorias Futuras
-
--   Upload direto de arquivos via formulário
--   Autenticação de usuários
--   Deploy em ambiente cloud
--   Testes automatizados
--   Dockerização
-
-------------------------------------------------------------------------
+---
 
 ## 📄 Licença
 
-Este projeto está sob a licença ISC.
+MIT License
