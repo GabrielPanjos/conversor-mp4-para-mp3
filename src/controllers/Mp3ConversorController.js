@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import NaoEncontrado from "../errors/NaoEncontrado.js";
+import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 
 export default class Mp3Conversor {
   static async getMp4Url(req, res, next) {
@@ -8,6 +9,12 @@ export default class Mp3Conversor {
       const { fileMp4 } = req.query;
 
       req.fileMp4 = fileMp4;
+
+      if (!path.basename(req.fileMp4).includes(".mp4")) {
+        return next(
+          new RequisicaoIncorreta("Apenas arquivos .mp4 são permitidos."),
+        );
+      }
 
       next();
     } catch (err) {
