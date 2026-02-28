@@ -7,13 +7,11 @@ export default class Mp3Conversor {
     try {
       const fileName = req.params.file;
 
-      const filePath = path.join(
-        process.cwd(),
-        "src",
-        "tmp",
-        "converted",
-        fileName,
-      );
+      const filePath = path.format({
+        dir: path.join(process.cwd(), "src", "tmp", "converted"),
+        name: fileName,
+        ext: ".mp3",
+      });
 
       if (!fs.existsSync(filePath)) {
         return next(new NaoEncontrado("Arquivo mp3 não encontrado."));

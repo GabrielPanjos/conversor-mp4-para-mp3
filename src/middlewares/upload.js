@@ -9,7 +9,7 @@ await fs.rm(path.join(process.cwd(), "src", "tmp"), {
   force: true,
 });
 
-fs.mkdir(uploadDir, {
+await fs.mkdir(uploadDir, {
   recursive: true,
 });
 
