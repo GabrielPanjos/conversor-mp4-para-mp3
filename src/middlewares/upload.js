@@ -1,10 +1,15 @@
 import multer from "multer";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 
 const uploadDir = path.join(process.cwd(), "src", "tmp", "uploads");
 
-fs.mkdirSync(uploadDir, {
+await fs.rm(path.join(process.cwd(), "src", "tmp"), {
+  recursive: true,
+  force: true,
+});
+
+fs.mkdir(uploadDir, {
   recursive: true,
 });
 
