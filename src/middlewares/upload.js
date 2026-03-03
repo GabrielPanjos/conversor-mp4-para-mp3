@@ -4,6 +4,7 @@ import fs from "fs/promises";
 
 const uploadDir = path.join(process.cwd(), "src", "tmp", "uploads");
 
+// ARRUMAR DEPOIS
 await fs.rm(path.join(process.cwd(), "src", "tmp"), {
   recursive: true,
   force: true,
@@ -24,8 +25,19 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
+  fileFilter: (req, file, cb) => {
+    const allowed = ["video/mp4"];
+
+    const ext = path.extname(file.originalname).toLowerCase();
+
+    if (!allowedMime.includes(file.mimetype) || ext !== ".mp4") {
+      return cb(new Error("Apenas arquivos MP4 são permitidos"));
+    }
+
+    cb(null, true);
+  },
   storage,
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits: { fileSize: 250 * 1024 * 1024 },
 }).single("file");
 
 export default upload;
