@@ -1,6 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs/promises";
+import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 
 const uploadDir = path.join(process.cwd(), "src", "tmp", "uploads");
 
@@ -30,8 +31,8 @@ const upload = multer({
 
     const ext = path.extname(file.originalname).toLowerCase();
 
-    if (!allowedMime.includes(file.mimetype) || ext !== ".mp4") {
-      return cb(new Error("Apenas arquivos MP4 são permitidos"));
+    if (!allowed.includes(file.mimetype) || ext !== ".mp4") {
+      return cb(new RequisicaoIncorreta("Apenas arquivos MP4 são permitidos"));
     }
 
     cb(null, true);
