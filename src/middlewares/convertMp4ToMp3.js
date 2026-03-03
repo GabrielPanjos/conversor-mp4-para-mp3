@@ -3,8 +3,8 @@ import ffmpegPath from "ffmpeg-static";
 import path from "path";
 import fs from "fs";
 import NaoEncontrado from "../errors/NaoEncontrado.js";
-import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 import ErroBase from "../errors/ErroBase.js";
+import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 
 if (!ffmpegPath) {
   throw new Error("FFmpeg não encontrado.");
@@ -17,6 +17,10 @@ export default async function convertToMp3(req, res, next) {
     if (!req.file || !fs.existsSync(req.file.path)) {
       return next(new NaoEncontrado("Arquivo MP4 não encontrado."));
     }
+
+    await ffprobeAsync(req.file.path).catch(() => {
+      throw new RequisicaoIncorreta("Arquivo não é um vídeo válido");
+    });
 
     if (path.extname(req.file.path).toLowerCase() !== ".mp4") {
       return next(
