@@ -3,7 +3,6 @@ import ffmpegPath from "ffmpeg-static";
 import path from "path";
 import fs from "fs";
 import NaoEncontrado from "../errors/NaoEncontrado.js";
-import ErroBase from "../errors/ErroBase.js";
 import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 
 if (!ffmpegPath) {
@@ -18,11 +17,7 @@ export default async function convertToMp3(req, res, next) {
       return next(new NaoEncontrado("Arquivo MP4 não encontrado."));
     }
 
-    await ffprobeAsync(req.file.path).catch(() => {
-      throw new RequisicaoIncorreta("Arquivo não é um vídeo válido");
-    });
-
-    if (path.extname(req.file.path).toLowerCase() !== ".mp4") {
+    if (path.extname(req.file.originalname).toLowerCase() !== ".mp4") {
       return next(
         new RequisicaoIncorreta(
           "Formato inválido. Apenas arquivos MP4 são permitidos.",
@@ -30,14 +25,14 @@ export default async function convertToMp3(req, res, next) {
       );
     }
 
-    const outputFile = path.parse(path.basename(req.file.originalname)).name;
+    const { name } = path.parse(req.file.originalname);
 
     const outputPath = path.join(
       process.cwd(),
       "src",
       "tmp",
       "converted",
-      `${outputFile}.mp3`,
+      `${name}.mp3`,
     );
 
     fs.mkdirSync(path.dirname(outputPath), {
@@ -52,15 +47,18 @@ export default async function convertToMp3(req, res, next) {
         .format("mp3")
         .save(outputPath)
         .on("end", resolve)
-        .on("error", (err) =>
-          // ARRUMAR DEPOIS
-          reject(new ErroBase(`Erro na conversão: ${err.message}`)),
+        .on("error", () =>
+          reject(
+            new RequisicaoIncorreta(
+              "Arquivo inválido ou não é um vídeo MP4 válido",
+            ),
+          ),
         );
     });
 
     res.status(200).json({
       message: "Arquivo convertido com sucesso!",
-      fileName: outputFile,
+      fileName: `${name}.mp3`,
     });
   } catch (err) {
     next(err);
