@@ -1,11 +1,10 @@
 import express from "express";
 import Mp3Conversor from "../controllers/Mp3ConversorController.js";
-import convertToMp3 from "../middlewares/convertMp4ToMp3.js";
-import upload from "../middlewares/upload.js";
+import UploadFile from "../middlewares/upload.js";
 
 const routes = express.Router();
 
-routes.post("/upload", upload, convertToMp3);
+routes.post("/upload", UploadFile.upload, Mp3Conversor.converter);
 routes.get("/download/:file", Mp3Conversor.downloadMp3);
 
 export default routes;

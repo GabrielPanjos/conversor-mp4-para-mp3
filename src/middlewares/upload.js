@@ -1,19 +1,9 @@
 import multer from "multer";
 import path from "path";
-import fs from "fs/promises";
 import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
+import deleteTempFiles from "../services/deleteTmpFiles.js";
 
 const uploadDir = path.join(process.cwd(), "src", "tmp", "uploads");
-
-// ARRUMAR DEPOIS
-await fs.rm(path.join(process.cwd(), "src", "tmp"), {
-  recursive: true,
-  force: true,
-});
-
-await fs.mkdir(uploadDir, {
-  recursive: true,
-});
 
 const storage = multer.diskStorage({
   destination(req, file, cb) {
@@ -25,20 +15,28 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
-  fileFilter: (req, file, cb) => {
-    const allowed = ["video/mp4"];
+export default class UploadFile {
+  static async upload(req, res, next) {
+    await deleteTempFiles();
 
-    const ext = path.extname(file.originalname).toLowerCase();
+    const upload = multer({
+      fileFilter: (req, file, cb) => {
+        const allowed = ["video/mp4"];
 
-    if (!allowed.includes(file.mimetype) || ext !== ".mp4") {
-      return cb(new RequisicaoIncorreta("Apenas arquivos MP4 são permitidos"));
-    }
+        const ext = path.extname(file.originalname).toLowerCase();
 
-    cb(null, true);
-  },
-  storage,
-  limits: { fileSize: 250 * 1024 * 1024 },
-}).single("file");
+        if (!allowed.includes(file.mimetype) || ext !== ".mp4") {
+          return cb(
+            new RequisicaoIncorreta("Apenas arquivos MP4 são permitidos"),
+          );
+        }
 
-export default upload;
+        cb(null, true);
+      },
+      storage,
+      limits: { fileSize: 250 * 1024 * 1024 },
+    }).single("file");
+
+    upload(req, res, next);
+  }
+}
