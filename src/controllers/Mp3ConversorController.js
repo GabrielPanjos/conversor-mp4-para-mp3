@@ -1,3 +1,4 @@
+import convertToMp3 from "../services/convertMp4ToMp3.js";
 import fs from "fs";
 import path from "path";
 import NaoEncontrado from "../errors/NaoEncontrado.js";
@@ -18,6 +19,20 @@ export default class Mp3Conversor {
       }
 
       return res.download(filePath);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async converter(req, res, next) {
+    try {
+      const file = req.file;
+
+      const output = await convertToMp3(file);
+
+      if (output) {
+        res.status(200).json(output);
+      }
     } catch (err) {
       next(err);
     }

@@ -5,19 +5,19 @@ import fs from "fs";
 import NaoEncontrado from "../errors/NaoEncontrado.js";
 import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
 
-if (!ffmpegPath) {
-  throw new Error("FFmpeg não encontrado.");
-}
+export default async function convertToMp3(file) {
+  if (!ffmpegPath) {
+    throw new Error("FFmpeg não encontrado.");
+  }
 
-Ffmpeg.setFfmpegPath(ffmpegPath);
+  Ffmpeg.setFfmpegPath(ffmpegPath);
 
-export default async function convertToMp3(req, res, next) {
   try {
-    if (!req.file || !fs.existsSync(req.file.path)) {
+    if (!file || !fs.existsSync(file.path)) {
       return next(new NaoEncontrado("Arquivo MP4 não encontrado."));
     }
 
-    if (path.extname(req.file.originalname).toLowerCase() !== ".mp4") {
+    if (path.extname(file.originalname).toLowerCase() !== ".mp4") {
       return next(
         new RequisicaoIncorreta(
           "Formato inválido. Apenas arquivos MP4 são permitidos.",
@@ -25,7 +25,7 @@ export default async function convertToMp3(req, res, next) {
       );
     }
 
-    const { name } = path.parse(req.file.originalname);
+    const { name } = path.parse(file.originalname);
 
     const outputPath = path.join(
       process.cwd(),
@@ -40,7 +40,7 @@ export default async function convertToMp3(req, res, next) {
     });
 
     await new Promise((resolve, reject) => {
-      Ffmpeg(req.file.path)
+      Ffmpeg(file.path)
         .noVideo()
         .audioBitrate(192)
         .audioFrequency(44100)
@@ -56,10 +56,10 @@ export default async function convertToMp3(req, res, next) {
         );
     });
 
-    res.status(200).json({
+    return {
       message: "Arquivo convertido com sucesso!",
       fileName: `${name}.mp3`,
-    });
+    };
   } catch (err) {
     next(err);
   }
