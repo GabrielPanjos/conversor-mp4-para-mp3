@@ -1,7 +1,7 @@
 import convertToMp3 from "../services/convertMp4ToMp3.js";
 import fs from "fs";
 import path from "path";
-import NaoEncontrado from "../errors/NaoEncontrado.js";
+import NotFound from "../errors/NotFound.js";
 
 export default class Mp3Conversor {
   static async downloadMp3(req, res, next) {
@@ -15,7 +15,7 @@ export default class Mp3Conversor {
       });
 
       if (!fs.existsSync(filePath)) {
-        return next(new NaoEncontrado("Arquivo mp3 não encontrado."));
+        return next(new NotFound("Arquivo mp3 não encontrado."));
       }
 
       return res.download(filePath);

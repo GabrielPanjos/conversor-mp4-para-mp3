@@ -1,14 +1,14 @@
 import express from "express";
 import routes from "./routes/index.js";
-import manipulador404 from "./middlewares/manipulador404.js";
-import manipuladorDeErros from "./middlewares/manipuladorDeErros.js";
+import manipulator404 from "./middlewares/manipulator404.js";
+import errorsManipulator from "./middlewares/errorsManipulator.js";
 
 const app = express();
 
 routes(app);
 
-app.use(manipulador404);
+app.use(manipulator404);
 
-app.use(manipuladorDeErros);
+app.use(errorsManipulator);
 
 export default app;
