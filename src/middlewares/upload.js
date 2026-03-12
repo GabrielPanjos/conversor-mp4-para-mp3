@@ -1,6 +1,6 @@
 import multer from "multer";
 import path from "path";
-import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
+import IncorrectRequest from "../errors/IncorrectRequest.js";
 import deleteTempFiles from "../services/deleteTmpFiles.js";
 
 const uploadDir = path.join(process.cwd(), "src", "tmp", "uploads");
@@ -27,7 +27,7 @@ export default class UploadFile {
 
         if (!allowed.includes(file.mimetype) || ext !== ".mp4") {
           return cb(
-            new RequisicaoIncorreta("Apenas arquivos MP4 são permitidos"),
+            new IncorrectRequest("Apenas arquivos MP4 são permitidos"),
           );
         }
 

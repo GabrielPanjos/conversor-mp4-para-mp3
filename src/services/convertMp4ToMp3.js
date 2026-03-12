@@ -2,8 +2,8 @@ import Ffmpeg from "fluent-ffmpeg";
 import ffmpegPath from "ffmpeg-static";
 import path from "path";
 import fs from "fs";
-import NaoEncontrado from "../errors/NaoEncontrado.js";
-import RequisicaoIncorreta from "../errors/RequisicaoIncorreta.js";
+import NotFound from "../errors/NotFound.js";
+import IncorrectRequest from "../errors/IncorrectRequest.js";
 
 export default async function convertToMp3(file) {
   if (!ffmpegPath) {
@@ -14,12 +14,12 @@ export default async function convertToMp3(file) {
 
   try {
     if (!file || !fs.existsSync(file.path)) {
-      return next(new NaoEncontrado("Arquivo MP4 não encontrado."));
+      return next(new NotFound("Arquivo MP4 não encontrado."));
     }
 
     if (path.extname(file.originalname).toLowerCase() !== ".mp4") {
       return next(
-        new RequisicaoIncorreta(
+        new IncorrectRequest(
           "Formato inválido. Apenas arquivos MP4 são permitidos.",
         ),
       );
@@ -49,7 +49,7 @@ export default async function convertToMp3(file) {
         .on("end", resolve)
         .on("error", () =>
           reject(
-            new RequisicaoIncorreta(
+            new IncorrectRequest(
               "Arquivo inválido ou não é um vídeo MP4 válido",
             ),
           ),
