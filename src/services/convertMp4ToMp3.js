@@ -59,6 +59,7 @@ export default async function convertToMp3(file) {
     return {
       message: "Arquivo convertido com sucesso!",
       fileName: `${name}.mp3`,
+      name: `${name}`,
     };
   } catch (err) {
     next(err);
